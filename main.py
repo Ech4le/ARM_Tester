@@ -171,3 +171,9 @@ if __name__ == "__main__":
 
     for item in score_board:
         print ("{:<40} {:<40}".format(item.upper(), str(score_board[item])))
+
+    prompt = input('Save results? [Y/N]: ')
+    if prompt.lower() == "y":
+        with open('results.txt', 'w') as fp:
+            for item in score_board:
+                fp.write("{:<40} {:<40}\n".format(item.upper(), str(score_board[item])))
