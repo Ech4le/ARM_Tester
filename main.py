@@ -1,5 +1,6 @@
 from datetime import datetime
 import multiprocessing as mp
+import cpuinfo
 
 
 def get_cpu_data():
@@ -63,7 +64,7 @@ def math_big_number_test(vals):
     t0 = datetime.now()
     
     #  3 - Iterate through calculation and check is result correct
-    for _ in range(1):
+    for _ in range(big_iteration):
         value = vals[0] ** vals[1]
         if value != control_value:
             raise ValueError("Single Core BIG value - CPU returned incorrect score.")
@@ -115,11 +116,51 @@ def math_all_core_test(vals, cores):
 
 if __name__ == "__main__":
     small_iteration = 600
+    big_iteration = 1
+    standard_values = (2938475, 32521)
+    big_values = (2938475, 3251121)
+    score_board = {
+        'single_core': 0,
+        'all_core': 0,
+        'big_number_single_core': 0,
+        'small_iteration': small_iteration,
+        'big_iteration': big_iteration,
+        'standard_values': standard_values,
+        'big_values': big_values,
+    }
+
+    ## Device details
+    device_info = cpuinfo.get_cpu_info()
+    score_board['python_version'] = device_info['python_version']
+    score_board['arch'] = device_info['arch']
+    score_board['bits'] = device_info['bits']
+
+    ## Not found on X86
+    try:
+        print(device_info['hardware_raw'])
+        score_board['hardware_raw'] = device_info['hardware_raw']
+    except Exception as e:
+        pass
+
+    score_board['brand_raw'] = device_info['brand_raw']
+    score_board['hz_advertised_friendly'] = device_info['hz_advertised_friendly']
+    score_board['hz_actual'] = round(device_info['hz_actual'][0] / 1000000000, 2)
+
     cores = get_cpu_data()
     print(f'Found {cores} logical CPU cores.')
+    print('=' * 80)
     print('Starting math test.')
-    standard_values = (2938475, 32521)
-    math_single_core_test(standard_values)
-    # big_values = (2938475, 3251121)
-    # math_big_number_test(big_values)
-    math_all_core_test(standard_values, cores)
+
+    single_core = round(math_single_core_test(standard_values), 2)
+    big_number_single_core = round(math_big_number_test(big_values), 2)
+    all_core = round(math_all_core_test(standard_values, cores), 2)
+
+    score_board['single_core'] = single_core
+    score_board['big_number_single_core'] = big_number_single_core
+    score_board['all_core'] = all_core
+
+    print('=' * 80)
+    print ("{:<40} {:<40}".format('NAME', 'VALUE'))
+
+    for item in score_board:
+        print ("{:<40} {:<40}".format(item.upper(), str(score_board[item])))
