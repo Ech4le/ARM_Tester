@@ -2,10 +2,15 @@
 
 ARM Tester is a tool to estimate CPU performence for ARM devices.
 Results will be printed in terminal, or saved to txt file.
+Note: Device should have low load before testing, due to lower capacity of cores.
+
+## TODO
+ - [ ] Online API to compare common SBC
+ - [ ] Comparision of results between devices (gui ?)
 
 ## Requirements
 
-Git and sudo privileges, if python3 isn't installed.
+Git and sudo privileges to init apt install script.
 
 ## Installation
 
