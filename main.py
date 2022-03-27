@@ -174,6 +174,10 @@ if __name__ == "__main__":
 
     prompt = input('Save results? [Y/N]: ')
     if prompt.lower() == "y":
-        with open('results.txt', 'w') as fp:
+        with open('results.txt', 'a') as fp:
+            sep = str('=' * 80 + '\n')
+            stmt = f'Results - {datetime.now().strftime("%m/%d/%Y, %H:%M:%S")} \n'
+            fp.write(sep)
+            fp.write(stmt)
             for item in score_board:
                 fp.write("{:<40} {:<40}\n".format(item.upper(), str(score_board[item])))
