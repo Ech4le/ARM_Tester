@@ -1,5 +1,7 @@
 from datetime import datetime
 import multiprocessing as mp
+from re import sub
+import subprocess
 import cpuinfo
 
 
@@ -117,8 +119,8 @@ def math_all_core_test(vals, cores):
 if __name__ == "__main__":
     small_iteration = 600
     big_iteration = 1
-    standard_values = (2938475, 32521)
-    big_values = (2938475, 3251121)
+    standard_values = (2938475, 7221)
+    big_values = (2938475, 721121)
     score_board = {
         'single_core': 0,
         'all_core': 0,
@@ -135,9 +137,14 @@ if __name__ == "__main__":
     score_board['arch'] = device_info['arch']
     score_board['bits'] = device_info['bits']
 
+    ## Get Raspberry version
+    bashCommand = "cat /proc/device-tree/model"
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    score_board['device'] = output.decode().rstrip('\x00')
+
     ## Not found on X86
     try:
-        print(device_info['hardware_raw'])
         score_board['hardware_raw'] = device_info['hardware_raw']
     except Exception as e:
         pass
