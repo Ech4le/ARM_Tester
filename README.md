@@ -7,6 +7,7 @@ Note: Device should have low load before testing, due to lower capacity of cores
 ## TODO
  - [ ] Online API to compare common SBC
  - [ ] Comparision of results between devices (gui ?)
+ - [ ] Testing of RAM, Disk IO speed, network speed
 
 ## Requirements
 
